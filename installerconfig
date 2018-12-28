@@ -1,0 +1,55 @@
+PARTITIONS=vtbd0
+DISTRIBUTIONS="kernel.txz base.txz"
+
+#!/bin/sh
+
+echo "===> Running installerconfig"
+
+echo "===> Raising network"
+## grab the first interface that is not lo0
+NETIF=`ifconfig -l | tr ' ' '\n' | grep -v 'lo0' | head -n1`
+ifconfig $NETIF up
+dhclient $NETIF
+
+echo "===> Installing pkg"
+env ASSUME_ALWAYS_YES=YES pkg update
+
+echo "===> Writing rc.conf"
+## we need a unique hostname.  regexp for primary mac address
+UUID=`ifconfig $NETIF | grep -m1 -o -E '[0-9a-f][0-9a-f]:[0-9a-f][0-9a-f]:[0-9a-f][0-9a-f]:[0-9a-f][0-9a-f]:[0-9a-f][0-9a-f]:[0-9a-f][0-9a-f]' | awk -F ':' '{print $4$5$6}'`
+
+cat > /etc/rc.conf << RC_CONF
+hostname="$UUID"
+
+ifconfig_$NETIF="DHCP"
+
+sshd_enable="YES"
+clear_tmp_enable="YES"
+syslogd_flags="-ss"
+sendmail_enable="NONE"
+dumpdev="NO"
+ntpd_enable="YES"
+ntpdate_enable="YES"
+ntpdate_flags="pool.ntp.org"
+RC_CONF
+
+echo "===> Configuring ssh"
+cat > /etc/ssh/sshd_config << SSHD_CONFIG
+PermitRootLogin prohibit-password
+PasswordAuthentication no
+Subsystem       sftp    /usr/libexec/sftp-server
+SSHD_CONFIG
+
+mkdir /root/.ssh
+fetch https://github.com/nihr43.keys -o /root/.ssh/authorized_keys
+
+echo "===> Configuring bootloader"
+cat >> /boot/loader.conf << LOADER_CONFIG
+loader_logo="beastie"
+LOADER_CONFIG
+
+echo "===> Updating system"
+env PAGER=cat freebsd-update fetch
+env PAGER=cat freebsd-update install
+
+reboot
