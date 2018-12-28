@@ -13,6 +13,7 @@ dhclient $NETIF
 
 echo "===> Installing pkg"
 env ASSUME_ALWAYS_YES=YES pkg update
+pkg install -y ca_root_nss
 
 echo "===> Writing rc.conf"
 ## we need a unique hostname.  regexp for primary mac address
