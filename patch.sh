@@ -27,7 +27,7 @@ ORIG_ISO_DIR="./`rnd`"
 mkdir $PATCHED_ISO_DIR
 mkdir $ORIG_ISO_DIR
 
-sudo mount -t cd9660 /dev/`mdconfig -f FreeBSD-12.0-RELEASE-amd64-disc1.iso` $ORIG_ISO_DIR
+sudo mount -t cd9660 /dev/`sudo mdconfig -f FreeBSD-12.0-RELEASE-amd64-disc1.iso` $ORIG_ISO_DIR
 rsync -aq $ORIG_ISO_DIR/ $PATCHED_ISO_DIR/
 
 # make modifications
