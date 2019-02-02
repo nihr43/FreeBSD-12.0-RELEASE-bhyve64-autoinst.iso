@@ -2,7 +2,7 @@
 #
 ## jenkins job to build freebsd iso for use in bhyve
 
-hash cdrtools rsync || sudo pkg install -y cdrtools ca_root_nss rsync
+hash mkisofs rsync || sudo pkg install -y cdrtools ca_root_nss rsync
 
 rnd () {
   dd if=/dev/random bs=16 count=1 status=none | md5
