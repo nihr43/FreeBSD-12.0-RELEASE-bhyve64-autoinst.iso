@@ -35,5 +35,5 @@ VOL_ID=$(isoinfo -d -i FreeBSD-12.0-RELEASE-amd64-disc1.iso | grep "Volume id" |
 mkisofs -J -R -no-emul-boot -V "$VOL_ID" -b boot/cdboot -o FreeBSD-12.0-RELEASE-bhyve64-autoinst.iso $PATCHED_ISO_DIR
 
 sudo umount $ORIG_ISO_DIR
-rm -rf $ORIG_ISO_DIR
-rm -rf $PATCHED_ISO_DIR
+sudo rm -rf $ORIG_ISO_DIR
+sudo rm -rf $PATCHED_ISO_DIR
