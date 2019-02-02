@@ -24,11 +24,11 @@ mkdir $PATCHED_ISO_DIR
 mkdir $ORIG_ISO_DIR
 
 sudo mount -t cd9660 /dev/`sudo mdconfig -f FreeBSD-12.0-RELEASE-amd64-disc1.iso` $ORIG_ISO_DIR
-rsync -aq $ORIG_ISO_DIR/ $PATCHED_ISO_DIR/
+sudo rsync -aq $ORIG_ISO_DIR/ $PATCHED_ISO_DIR/
 
 # make modifications
-cp ./installerconfig $PATCHED_ISO_DIR/etc/installerconfig
-cp ./rc.local $PATCHED_ISO_DIR/etc/rc.local
+sudo cp ./installerconfig $PATCHED_ISO_DIR/etc/installerconfig
+sudo cp ./rc.local $PATCHED_ISO_DIR/etc/rc.local
 
 # create the new ISO.   VOLD_ID is important..
 VOL_ID=$(isoinfo -d -i FreeBSD-12.0-RELEASE-amd64-disc1.iso | grep "Volume id" | awk '{print $3}')
