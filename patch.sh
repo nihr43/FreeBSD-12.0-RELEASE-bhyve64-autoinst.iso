@@ -17,10 +17,6 @@ rnd () {
  rm ./FreeBSD-12.0-RELEASE-bhyve64-autoinst.iso
 }
 
-rnd () {
-  dd if=/dev/random bs=16 count=1 status=none | md5
-}
-
 PATCHED_ISO_DIR="./`rnd`"
 ORIG_ISO_DIR="./`rnd`"
 
