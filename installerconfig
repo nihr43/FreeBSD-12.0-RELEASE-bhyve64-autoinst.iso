@@ -1,4 +1,4 @@
-PARTITIONS=vtbd0
+PARTITIONS=ada0
 DISTRIBUTIONS="kernel.txz base.txz"
 
 #!/bin/sh
@@ -17,21 +17,23 @@ pkg install -y ca_root_nss
 
 echo "===> Writing rc.conf"
 ## we need a unique hostname.  regexp for primary mac address
-UUID=`ifconfig $NETIF | grep -m1 -o -E '[0-9a-f][0-9a-f]:[0-9a-f][0-9a-f]:[0-9a-f][0-9a-f]:[0-9a-f][0-9a-f]:[0-9a-f][0-9a-f]:[0-9a-f][0-9a-f]' | awk -F ':' '{print $4$5$6}'`
+UUID=`ifconfig $NETIF \
+        | grep -m1 -o -E '[0-9a-f][0-9a-f]:[0-9a-f][0-9a-f]:[0-9a-f][0-9a-f]:[0-9a-f][0-9a-f]:[0-9a-f][0-9a-f]:[0-9a-f][0-9a-f]' \
+        | awk -F ':' '{print $4$5$6}'`
 
 cat > /etc/rc.conf << RC_CONF
 hostname="$UUID"
 
 ifconfig_$NETIF="DHCP"
 
-sshd_enable="YES"
 clear_tmp_enable="YES"
 syslogd_flags="-ss"
 sendmail_enable="NONE"
-dumpdev="NO"
-ntpd_enable="YES"
+sshd_enable="YES"
 ntpdate_enable="YES"
-ntpdate_flags="pool.ntp.org"
+ntpd_enable="YES"
+powerd_enable="YES"
+dumpdev="NO"
 RC_CONF
 
 echo "===> Configuring ssh"
