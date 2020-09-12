@@ -1,4 +1,8 @@
-PARTITIONS=ada0
+export nonInteractive="YES"
+export ZFSBOOT_VDEV_TYPE="stripe"
+export ZFSBOOT_DISKS="ada0"
+export ZFSBOOT_SWAP_SIZE="0g"
+export ZFSBOOT_CONFIRM_LAYOUT="1"
 DISTRIBUTIONS="kernel.txz base.txz"
 
 #!/bin/sh
